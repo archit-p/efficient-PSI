@@ -29,3 +29,5 @@ Each party has a bit, and they want to find the product of the bits.
 2. Create GitHub repo with wiki.
 
 #### Weeks 3-4
+1. Study cryptography constructions - hash functions, symmetric encryption, asymmetric encrpytion.
+2. Update wiki with cryptography section.
