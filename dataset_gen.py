@@ -4,7 +4,7 @@ import readerHash as RH
 class FileGenerator:
 
     """
-        This class creates a single file. The file structure is as follows:
+        This class creates a single file.
 
         The class takes 3 parameters:
         1.) filepath -- The path of the raw file to write data to
