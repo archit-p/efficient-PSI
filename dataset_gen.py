@@ -34,10 +34,10 @@ class FileGenerator:
 
 
 
-rawf1 = FileGenerator('datafile.raw', 10000, 1000000)
+rawf1 = FileGenerator('datafile.raw', 1000000, 1000000)
 rawf1.createFile()
 
-rawf2 = FileGenerator('datafile2.raw', 10000, 1000000)
+rawf2 = FileGenerator('datafile2.raw', 1000000, 1000000)
 rawf2.createFile()
 
 # Uncomment the below lines to view the buckets
