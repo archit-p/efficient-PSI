@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/simplest-oblivious-transfer-master/src')
+sys.path.append('/media/user/D:/Codes/SMPC/smpc/simplest-oblivious-transfer-master/src/')
 import encrypt
 from fastecdsa import keys,curve, ecdsa
 
