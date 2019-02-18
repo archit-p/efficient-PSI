@@ -57,8 +57,11 @@ print(key_hashed_1)
 # print(hex(k1.x))
 # print(hex(kr.x))
 
+# encrypt using k0 and k1
 e0 = encrypt.cipher(key_hashed_0,msg1)
 e1 = encrypt.cipher(key_hashed_1,msg2)
+
+# decrypt using k_r
 m0 = encrypt.decipher(key_hashed_r,e0)
 m1 = encrypt.decipher(key_hashed_r,e1)
 
