@@ -1,5 +1,5 @@
 import sys
-import encrypt
+import ./includes/encrypt
 from fastecdsa import keys,curve,ecdsa
 import socket
 
