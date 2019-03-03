@@ -26,16 +26,15 @@ def decipher(key, message):
     if(len(key) != len(message)):
         print(len(key))
         print(len(message))
-        print("Sorry lengths don't match")
-        return
+        print("Length of string and key don't match")
     byte_key = codecs.decode(key, "hex")
-    #print(byte_key)
     byte_message = codecs.decode(message, "hex")
-    #print(byte_message)
     pt = axorb(byte_key, byte_message)
     pt = str(codecs.encode(pt, "hex"))[2:-1]
     while(pt[-1] == "0"):
         pt = pt[0:-1]
+    if(len(pt)%2 == 1):
+        pt = pt + "0"
     pt = codecs.decode(pt,"hex")
     pt = pt.decode("utf-8",errors='ignore')
     return pt
