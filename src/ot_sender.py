@@ -3,20 +3,35 @@ import encrypt
 from fastecdsa import keys,curve, ecdsa
 import socket
 
-class Sender():
-    def __init__(self, msg1, msg2, srv_port):
+class OTSender():
+    '''
+    Sender connects to a server port and starts sending its data
+    msg1 = first message for OT
+    msg2 = second message for OT
+    srv_port = port on which server is running
+    sock = socket to communicate
+    '''
+    def __init__(self, msg1, msg2, srv_port, sock):
         self.a = keys.gen_private_key(curve.P256)
         self.A = keys.get_public_key(self.a,curve.P256)  
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock = sock
         self.srv_port = srv_port
         self.msg1 = msg1
         self.msg2 = msg2
 
-    def send_A(self):
-        self.sock.connect(('127.0.0.1', self.srv_port))
+    def __str__(self):
+        return "---------------------\n" + "OT Strings are:\n" + "1. " + self.msg1 + "\n2. " + self.msg2 + "\n---------------------\n"
+
+    def send(self):
+        try:
+            self.sock.connect(('127.0.0.1', self.srv_port))
+        except:
+            print("Could not connect to server. Start server using peq_receiver.py first.")
+            exit(1)
+            
         ka = keys.export_key(self.A, curve.P256)
         self.sock.send(ka.encode('ASCII'))
-        data = self.sock.recv(1024)
+        data = self.sock.recv(177)
         with open('sender.dat', 'w') as f:
             f.write(data.decode('ASCII'))
         B = keys.import_key('sender.dat')[1]
@@ -29,18 +44,8 @@ class Sender():
         e0 = encrypt.cipher(key_hashed_0,self.msg1)
         e1 = encrypt.cipher(key_hashed_1,self.msg2)
 
-        # send e0 and e1
+            # send e0 and e1
         self.sock.send(e0)
-        data = self.sock.recv(1024)
-        print(data)
         self.sock.send(e1)
 
-def main():
-    if len(sys.argv) < 2:
-        print("Usage: python3 ot_alice.py <port-no>")
-    port = sys.argv[1]
-    alice = Sender("Nisarg", "Deepak", int(port))
-    alice.send_A()
-
-if __name__ == '__main__':
-    main()
+        data = self.sock.recv(1024)
