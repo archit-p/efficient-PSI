@@ -28,10 +28,12 @@ class OTSender():
         except:
             print("Could not connect to server. Start server using peq_receiver.py first.")
             exit(1)
+
+        # self.sock.connect(('127.0.0.1', self.srv_port))
             
         ka = keys.export_key(self.A, curve.P256)
         self.sock.send(ka.encode('ASCII'))
-        data = self.sock.recv(177)
+        data = self.sock.recv(1024)
         with open('sender.dat', 'w') as f:
             f.write(data.decode('ASCII'))
         B = keys.import_key('sender.dat')[1]
@@ -49,3 +51,5 @@ class OTSender():
         self.sock.send(e1)
 
         data = self.sock.recv(1024)
+
+        self.sock.close()

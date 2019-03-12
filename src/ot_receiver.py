@@ -23,7 +23,8 @@ class OTReceiver():
         e1 = ''
         conn, self.addr = self.sock.accept()
         with conn:
-            data = conn.recv(177)
+            print("connected")
+            data = conn.recv(1024)
             with open('receiver.dat', 'w') as f:
                 f.write(data.decode('ASCII'))
             A = keys.import_key('receiver.dat')[1]
@@ -43,5 +44,7 @@ class OTReceiver():
         m = list()
         m.append(encrypt.decipher(key_hashed_r,e0))
         m.append(encrypt.decipher(key_hashed_r,e1))
+
+        # self.sock.close()
 
         return m[self.bit]

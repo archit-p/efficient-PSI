@@ -5,7 +5,7 @@ from sys import argv
 
 def main():
 	if(len(argv) != 5):
-		print("Usage: python3 driver.py <filename1> <filename2> <bucket-size> <max-elem-size>");
+		print("Usage: python3 driver.py <filename1> <filename2> <bucket-size> <max-elem-size>")
 		return None
 	
 	bsize = int(argv[3])
