@@ -3,6 +3,7 @@ import socket
 import random
 import pickle
 from fastecdsa import keys,curve, ecdsa
+import cProfile
 
 def peq_test_sender(num,srv_port):
     result = 0
@@ -15,35 +16,36 @@ def peq_test_sender(num,srv_port):
     print("Performing OT")
     intersection = set()
     for numbers in buckets:
-        sender_s.send(str(len(numbers)).encode('utf-8'))
+        len_a = len(numbers)
+        sender_s.send(str(len_a).encode('utf-8'))
         len_b = int(sender_s.recv(32))
         print("Received length of bucket is " + str(len_b))
         
-        result_array = [[False for x in range(len_b)] for y in range(len(numbers))]
-        #print(result_array)
+        result_array = [[False for x in range(len_b)] for y in range(len_a)]
+        print(result_array)
         for i in range(len_b):
-            for j in range(0,len(numbers)):
+            for j in range(len_a):
                 num_cpy = numbers[j]
-                print(num_cpy)
+                #print(num_cpy)
+
                 # send the length of buckets
                 result = 0
                 str_list = []
                 for k in range(0,8):
                     bit = num_cpy&1
                     num_cpy = num_cpy >> 1
-                    rand_str = []
+                    rand_str = list()
 
-                    rand_str.append(str(random.randint(10000000,20000000)))
-                    rand_str.append(str(random.randint(10000000,20000000)))
+                    rand_str.append(random.randint(10000000,20000000))
+                    rand_str.append(random.randint(10000000,20000000))
 
-                    result = result ^ int(rand_str[bit])
+                    result = result ^ rand_str[bit]
 
                     while True:
-                        obj = OTSender(rand_str[0],rand_str[1],4444,sender_s)
+                        obj = OTSender(str(rand_str[0]), str(rand_str[1]), 4444, sender_s)
                         ka = keys.export_key(obj.A, curve.P256)
                         sender_s.send(ka.encode('ASCII'))
-
-                        data = sender_s.recv(177)
+                        data = sender_s.recv(512)
                         if(data != b'ERROR'):
                             break
                     
@@ -53,7 +55,7 @@ def peq_test_sender(num,srv_port):
                             break
                         except:
                             sender_s.send(b"ERROR")
-                            data = sender_s.recv(177)
+                            data = sender_s.recv(512)
                             fail_count += 1
 
                     ciphers = obj.sender_keygen(B)
@@ -71,7 +73,7 @@ def peq_test_sender(num,srv_port):
     print(intersection)
 
 def main():
-    s = peq_test_sender(10,4444)
+    cProfile.run('peq_test_sender(10,4444)')
 
 if __name__ == "__main__":
     main()

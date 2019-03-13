@@ -38,8 +38,3 @@ class OTSender():
             "e1": self.e1
         }
         return ciphers
-
-    def send(self):
-        
-
-        data = self.sock.recv(1024)
