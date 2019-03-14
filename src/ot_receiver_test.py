@@ -6,11 +6,15 @@ import pickle
 import encrypt
 import time
 import cProfile
+import readerHash as RH
+import setIntersect as SI
+from sys import argv
 
-def ot_receiver_test(num, port):
-    result = 0
+def ot_receiver_test(port, buckets):
+    count_ot = 0
     receiver_s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     receiver_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    receiver_s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     receiver_s.bind(('127.0.0.1', port))
     receiver_s.listen()
     print("listening on port " + str(port))
@@ -18,7 +22,6 @@ def ot_receiver_test(num, port):
     # use bits of the number as choice bits
     print("received connection from " +  str(addr))
     fail_count = 0
-    buckets = [[3, 1, 5, 6, 2],[11, 13, 15, 16, 17]]
     intersection = set()
 
     for numbers in buckets:
@@ -32,11 +35,10 @@ def ot_receiver_test(num, port):
         for i in range(len_a):
             for j in range(len_b):
                 num_cpy = numbers[i]
-                print(num_cpy)
                 result = 0
                 #before starting equality send the length of a bucket
                 # equality for a given number
-                for k in range(0,8):
+                for k in range(0,32):
                     bit = num_cpy & 1
                     num_cpy = num_cpy >> 1
                     while True:
@@ -50,6 +52,7 @@ def ot_receiver_test(num, port):
 
                     # send B
                     while True:
+                        count_ot += 1
                         obj = OTReceiver(bit, receiver_s)
                         obj.set_B(A)
                         bk = keys.export_key(obj.B, curve.P256)
@@ -63,23 +66,31 @@ def ot_receiver_test(num, port):
                     choice_cipher = "e" + str(bit)
                     cipher = pickle.loads(data)
                     msg = encrypt.decipher(key_hashed_r, cipher[choice_cipher])
-                    
                     result = result ^ int(msg)
 
                 client_result = int(conn.recv(32))
                 result_array[i][j] = (result == client_result)
                 if(result_array[i][j] == True):
+                    print("Adding {} to intersection!".format(numbers[i]))
                     intersection.add(numbers[i])
                 conn.send(str(result).encode('utf-8'))
         print(result_array)
-
     print("Intersection is = ")
     print(intersection)
+    print("Number of OT Receivers = {}".format(count_ot))
     receiver_s.close()
 
 def main():
-    stime = time.time()
-    cProfile.run('ot_receiver_test(10, 4444)')
+    if(len(argv) != 3):
+        print("Usage: python3 driver.py <filename1> <num-buckets>");
+        exit
+
+    num_b = int(argv[2])
+
+    test1 = RH.fileReaderAndHash(argv[1],num_b)
+    buckets = test1.load_buckets()
+    ot_receiver_test(4444, buckets)
+    #cProfile.runctx('ot_receiver_test(4444, buckets)',locals(),globals())
 
 if __name__ == "__main__":
     main()
