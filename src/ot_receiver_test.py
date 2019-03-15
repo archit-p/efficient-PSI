@@ -6,8 +6,7 @@ import pickle
 import encrypt
 import time
 import cProfile
-import readerHash as RH
-import setIntersect as SI
+import reader_hash as RH
 from sys import argv
 
 def ot_receiver_test(port, buckets):

@@ -4,8 +4,7 @@ import random
 import pickle
 from fastecdsa import keys,curve, ecdsa
 import cProfile
-import readerHash as RH
-import setIntersect as SI
+import reader_hash as RH
 from sys import argv
 
 def ot_sender_test(srv_port,buckets):
