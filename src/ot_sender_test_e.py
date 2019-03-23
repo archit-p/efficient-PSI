@@ -35,8 +35,8 @@ def ot_sender_test(srv_port,buckets):
                     num_cpy = num_cpy >> 1
                     rand_str = list()
 
-                    rand_str.append(random.randint(10000000,20000000))
-                    rand_str.append(random.randint(10000000,20000000))
+                    rand_str.append(random.randint(10000000000000000000,20000000000000000000))
+                    rand_str.append(random.randint(10000000000000000000,20000000000000000000))
 
                     result = result ^ rand_str[bit]
 
@@ -83,8 +83,8 @@ def main():
 
     test1 = RH.fileReaderAndHash(argv[1],num_b)
     buckets = test1.load_buckets()
-    #ot_sender_test(4444, buckets)
-    cProfile.runctx('ot_sender_test(4444, buckets)',locals(),globals())
+    ot_sender_test(4444, buckets)
+    #cProfile.runctx('ot_sender_test(4444, buckets)',locals(),globals())
 
 if __name__ == "__main__":
     main()

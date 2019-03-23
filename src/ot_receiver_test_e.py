@@ -88,8 +88,8 @@ def main():
 
     test1 = RH.fileReaderAndHash(argv[1],num_b)
     buckets = test1.load_buckets()
-    #ot_receiver_test(4444, buckets)
-    cProfile.runctx('ot_receiver_test(4444, buckets)',locals(),globals())
+    ot_receiver_test(4444, buckets)
+    #cProfile.runctx('ot_receiver_test(4444, buckets)',locals(),globals())
 
 if __name__ == "__main__":
     main()

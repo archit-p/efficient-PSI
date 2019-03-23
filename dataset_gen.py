@@ -30,20 +30,23 @@ class FileGenerator:
 
 
 def main():
-	if not os.path.exists("./test"):
-		os.makedirs("test")
-    max_p = sys.argv[1]
-    print("Generating datasets from 2 to 2^{} elements!")
-	# generate 20 files with data ranging from 10 elements to 200 elements elements
-	for i in range(maxp):
-		num_ele = pow(2,i+1)
-		fname1 = "./test/data" + str(i+1) + "_1.raw"
-		rawf1 = FileGenerator(fname1, num_ele, num_ele<<2)
-		rawf1.createFile()
-		fname2 = "./test/data" + str(i+1) + "_2.raw"
-		rawf2 = FileGenerator(fname2, num_ele, num_ele<<2)
-		rawf2.createFile()
-		print("Dataset " + str(i+1) + " --> generated!")
+    if not os.path.exists("./test"):
+        os.makedirs("test")
+    if(len(sys.argv) != 2):
+        print("Usage: python3 dataset_gen.py <num-datasets>")
+        exit()
+    max_p = int(sys.argv[1])
+    print("Generating datasets from 2 to 2^{} elements!".format(max_p))
+    # generate 20 files with data ranging from 10 elements to 200 elements elements
+    for i in range(max_p):
+        num_ele = pow(2,i+1)
+        fname1 = "./test/data" + str(i+1) + "_1.raw"
+        rawf1 = FileGenerator(fname1, num_ele, num_ele<<2)
+        rawf1.createFile()
+        fname2 = "./test/data" + str(i+1) + "_2.raw"
+        rawf2 = FileGenerator(fname2, num_ele, num_ele<<2)
+        rawf2.createFile()
+        print("Dataset " + str(i+1) + " --> generated!")
 
 if __name__ == "__main__":
-	main()
+    main()
